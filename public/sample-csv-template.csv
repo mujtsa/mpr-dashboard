@@ -1,0 +1,5 @@
+date,week_number,division,match_type,opponent_club,player_1,player_2,milton_score,opponent_score,opponent_player_1,opponent_player_2
+2026-05-27,1,4.0,mens_doubles,Burlington Pickleball Club,Player One,Player Two,2,1,Opp Player A,Opp Player B
+2026-05-27,1,3.5+,womens_doubles,Burlington Pickleball Club,Player Three,Player Four,0,2,Opp Player C,Opp Player D
+2026-05-27,1,3.5-,mixed_doubles,Oakville Pickleball,Player Five,Player Six,2,0,Opp Player E,Opp Player F
+2026-05-27,1,4.0,mixed_doubles,Burlington Pickleball Club,Player One,Player Three,1,2,,
