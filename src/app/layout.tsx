@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/layout/Header";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mpr-dashboard.vercel.app"),
@@ -33,6 +34,7 @@ export default function RootLayout({
         <footer className="border-t border-surface-border py-4 text-center text-xs text-slate-500">
           Milton Pickleball Analytics
         </footer>
+        <Analytics />
       </body>
     </html>
   );

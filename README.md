@@ -112,6 +112,33 @@ If a player name is not found in the database, a new player is created automatic
 
 ---
 
+## Analytics
+
+Vercel Web Analytics is enabled via the `@vercel/analytics` package. The `<Analytics />` component is mounted in `src/app/layout.tsx` and automatically tracks page views across every route.
+
+**No custom tracking code is needed.** Vercel handles data collection.
+
+### Viewing analytics
+
+1. Open your Vercel project dashboard at https://vercel.com
+2. Select the **mpr-dashboard** project
+3. Click the **Analytics** tab in the top navigation
+
+### Available metrics
+
+| Metric | Description |
+|--------|-------------|
+| Page views | Total views per page |
+| Unique visitors | Distinct visitors per day/week/month |
+| Top pages | Most visited routes (e.g. `/dashboard`, `/players`) |
+| Referrers | Where visitors came from |
+| Devices | Desktop vs mobile breakdown |
+| Countries | Visitor geography |
+
+> Analytics data only appears after the app is deployed to Vercel. It does not collect data in local development.
+
+---
+
 ## Development Workflow
 
 This project is built incrementally. Each step is approved before the next begins.

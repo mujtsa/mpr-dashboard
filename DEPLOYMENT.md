@@ -227,7 +227,29 @@ Vercel will build and deploy within ~2 minutes.
 
 ---
 
-## 7. Known Production Considerations
+## 7. Enable Vercel Analytics
+
+Analytics tracking is already built into the app via `@vercel/analytics`. You just need to enable it in the Vercel dashboard.
+
+### Enable analytics
+
+1. Open your Vercel project at https://vercel.com
+2. Go to the **Analytics** tab
+3. Click **Enable Analytics**
+4. No redeployment is required — the `<Analytics />` component is already included in every page
+
+### Verify data collection
+
+After enabling, visit the live app and navigate between a few pages. Return to the Vercel Analytics tab and within a few minutes you should see:
+
+- Page view events appearing under **Real-time**
+- Top pages starting to populate under the **Pages** tab
+
+If no data appears after 10 minutes, confirm the app is deployed (not running locally) — the analytics script only fires in production Vercel deployments.
+
+---
+
+## 8. Known Production Considerations
 
 | Item | Detail |
 |------|--------|
