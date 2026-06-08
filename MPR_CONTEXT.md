@@ -110,12 +110,29 @@ The `/matches` route redirects to `/dashboard`. Match history is accessed via th
 
 ## Dashboard Views
 - Season Summary
+- Team Performance (week-by-week record vs each opponent club, by division)
 - Most Improved Players (season rating change, no duplicates with win %)
 - Best Win Percentage (min. 4 matches; sort: win% → wins → rating change → current rating)
 - Top Partnerships (min. 2 matches)
 - Biggest Gains by Week (week selector, defaults to latest week with matches)
 - Best Avg Points Won % (min. 4 matches)
 - Match Results (filterable: week, division, type, player, opponent, result)
+
+## Team Performance Section
+
+Placement: directly below Season Summary, above player analytics widgets.
+
+Columns: Week | Opponent Club | 4.0 | 3.5+ | 3.5− | Total
+
+Calculation:
+- For each (week_number, opponent_club) combination, count wins and losses per division.
+- Record = match wins-losses (e.g. 4-8).
+- If a division was not played that week vs that club, the cell is blank (not 0-0).
+- Total = sum of wins and losses across all divisions.
+
+Sort: week descending, then opponent club alphabetically.
+
+Colour coding: green if wins > losses, red if losses > wins, neutral if tied.
 
 ## Dashboard Design Rules
 - Dashboard summary widgets show top 5 entries only.

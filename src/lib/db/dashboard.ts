@@ -43,6 +43,26 @@ export interface WeeklyGain {
   matches_this_week:  number;
 }
 
+// ---------------------------------------------------------------------------
+// Team Performance types
+// ---------------------------------------------------------------------------
+
+export interface DivisionRecord {
+  wins:   number;
+  losses: number;
+}
+
+export type DivisionKey = '4.0' | '3.5+' | '3.5-';
+
+export interface TeamPerformanceRow {
+  week_number:   number;
+  opponent_club: string;
+  by_division:   Partial<Record<DivisionKey, DivisionRecord>>;
+  total:         DivisionRecord;
+}
+
+// ---------------------------------------------------------------------------
+
 export interface WeeklyGainEntry {
   player_id:      string;
   display_name:   string;
@@ -383,4 +403,57 @@ export async function getBestAvgPointsWon(
     }))
     .sort((a, b) => b.avg_pct - a.avg_pct)
     .slice(0, limit);
+}
+
+// ---------------------------------------------------------------------------
+// Team Performance — week-by-week record against each opponent club
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns a win/loss breakdown for each (week, opponent_club) combination,
+ * split by division and summed as a total.
+ * Sorted by week descending, then opponent club alphabetically.
+ */
+export async function getTeamPerformance(seasonId: string): Promise<TeamPerformanceRow[]> {
+  const supabase = createServerClient();
+  const { data, error } = await supabase
+    .from('matches')
+    .select('week_number, opponent_club, division, result')
+    .eq('season_id', seasonId);
+
+  if (error) throw new Error(`getTeamPerformance: ${error.message}`);
+  if (!data || data.length === 0) return [];
+
+  const groups = new Map<string, TeamPerformanceRow>();
+
+  for (const match of data) {
+    const key = `${match.week_number}|${match.opponent_club}`;
+    if (!groups.has(key)) {
+      groups.set(key, {
+        week_number:   match.week_number   as number,
+        opponent_club: match.opponent_club as string,
+        by_division:   {},
+        total:         { wins: 0, losses: 0 },
+      });
+    }
+
+    const row = groups.get(key)!;
+    const div = match.division as DivisionKey;
+
+    if (!row.by_division[div]) row.by_division[div] = { wins: 0, losses: 0 };
+
+    if (match.result === 'win') {
+      row.by_division[div]!.wins++;
+      row.total.wins++;
+    } else if (match.result === 'loss') {
+      row.by_division[div]!.losses++;
+      row.total.losses++;
+    }
+  }
+
+  return [...groups.values()].sort((a, b) =>
+    b.week_number !== a.week_number
+      ? b.week_number - a.week_number
+      : a.opponent_club.localeCompare(b.opponent_club),
+  );
 }

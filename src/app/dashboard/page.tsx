@@ -9,8 +9,10 @@ import {
   getTopPartnerships,
   getWeeklyGainsSummary,
   getBestAvgPointsWon,
+  getTeamPerformance,
 } from '@/lib/db/dashboard';
 import SeasonSummaryBar  from '@/components/dashboard/SeasonSummaryBar';
+import TeamPerformance   from '@/components/dashboard/TeamPerformance';
 import MostImproved      from '@/components/dashboard/MostImproved';
 import BestWinPct        from '@/components/dashboard/BestRecords';
 import TopPartnerships   from '@/components/dashboard/BestPartners';
@@ -39,16 +41,25 @@ export default async function DashboardPage() {
     );
   }
 
-  const [summary, mostImproved, bestWinPct, topPartnerships, weeklySummary, bestAvgPoints, allMatches] =
-    await Promise.all([
-      getSeasonSummary(season.id),
-      getMostImproved(season.id, 5),
-      getBestWinPct(season.id, 5, 4),
-      getTopPartnerships(season.id, 5),
-      getWeeklyGainsSummary(season.id),
-      getBestAvgPointsWon(season.id, 5, 4),
-      getMatchesBySeason(season.id),
-    ]);
+  const [
+    summary,
+    teamPerformance,
+    mostImproved,
+    bestWinPct,
+    topPartnerships,
+    weeklySummary,
+    bestAvgPoints,
+    allMatches,
+  ] = await Promise.all([
+    getSeasonSummary(season.id),
+    getTeamPerformance(season.id),
+    getMostImproved(season.id, 5),
+    getBestWinPct(season.id, 5, 4),
+    getTopPartnerships(season.id, 5),
+    getWeeklyGainsSummary(season.id),
+    getBestAvgPointsWon(season.id, 5, 4),
+    getMatchesBySeason(season.id),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -59,8 +70,13 @@ export default async function DashboardPage() {
         </p>
       </div>
 
+      {/* Season summary stat bar */}
       <SeasonSummaryBar season={season} summary={summary} />
 
+      {/* Team Performance — directly below season summary */}
+      <TeamPerformance rows={teamPerformance} />
+
+      {/* Player analytics widgets */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <MostImproved      data={mostImproved}    />
         <BestWinPct        data={bestWinPct}       />
@@ -69,6 +85,7 @@ export default async function DashboardPage() {
         <BestAvgPoints     data={bestAvgPoints}    />
       </div>
 
+      {/* Filterable match results */}
       <MatchResultsClient matches={allMatches} />
     </div>
   );
